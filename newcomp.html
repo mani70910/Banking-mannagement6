@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous">
+    <style>
+            body {
+            font-family: Arial, sans-serif;
+            background-color: #e2f181;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #d65ee0, #b0f185);
+        }
+
+        .contact-container {
+            border: 2px solid #960e60;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #637d52;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .contact-container h2 {
+            color: #f685c5;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-submit {
+            background-color: #007BFF;
+            color: #afe98c;
+            padding-left: 2.5rem;
+            padding-right: 2.5rem;
+        }
+    </style>
+    <!-- Include Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="contact-container">
+            <h2>Cleanliness Complaint Form</h2>
+
+            <!-- Form Start -->
+            <form id="formId">
+                <label for="form3Example4">Name:</label>
+                <input type="text" id="form3Example4" class="form-control" placeholder="Your Name" required />
+
+                <label for="form3Example3">Email address:</label>
+                <input type="email" id="form3Example3" class="form-control"
+                    placeholder="Enter a valid email address" required />
+
+                    <label for="exampleTextarea">File:</label>
+                <textarea class="form-control" id="exampleTextarea" rows="3"
+                    placeholder="Type your message here..." required></textarea>
+
+                    <label for="file">Select a file:</label>
+                    <input type="file" name="file" id="file" accept=".txt, .pdf, .docx">
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-submit btn-lg" onclick="sendMail();">Submit</button>
+                </div>
+            </form>
+            <!-- Form End -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBv1KU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script>
+       const firebaseConfig = {
+  apiKey: "AIzaSyBfsPNO0Q4WnDnOPJxOO_4Qn__I6dQoYkc",
+  authDomain: "mani-2af87.firebaseapp.com",
+  databaseURL: "https://mani-2af87-default-rtdb.firebaseio.com",
+  projectId: "mani-2af87",
+  storageBucket: "mani-2af87.appspot.com",
+  messagingSenderId: "717897024844",
+  appId: "1:717897024844:web:c1d80fbaee8bd525943be9"
+};
+
+        firebase.initializeApp(firebaseConfig);
+
+        const database = firebase.database();
+        const form = document.getElementById("formId");
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const name = document.getElementById('form3Example4').value;
+            const email = document.getElementById('form3Example3').value;
+            const message = document.getElementById('exampleTextarea').value;
+            const file = document.getElementById('file').value;
+
+            const newDataRef = database.ref('formData').push();
+            newDataRef.set({
+                name: name,
+                email: email,
+                message: message,
+                file: file
+            })
+                .then(() => {
+                    console.log('Data saved successfully!');
+                    alert("We have received your query. We will reach you soon at the given email.");
+                })
+                .catch((error) => {
+                    console.error('Error saving data:', error);
+                });
+        });
+    </script>
+    <script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init("0zzxT92M3RuJMeG9i");
+        })();
+    </script>
+    <script>
+        function sendMail() {
+    var name = document.querySelector("#form3Example4").value;
+    var email = document.querySelector("#form3Example3").value;
+    var message = document.querySelector("#exampleTextarea").value;
+    var fileInput = document.querySelector("#file");
+    var file = fileInput.files[0];  // Access the file object
+
+    var params = {
+        name: name,
+        email: email,
+        message: message,
+        file: file,
+    };
+
+    const serviceID = "service_v4a8lnq";
+    const templateID = "template_vfco49a";
+
+    // Perform the file upload logic here using the file object
+
+    emailjs.send(serviceID, templateID, params)
+        .then(res => {
+            document.getElementById('formId').reset();
+            alert("Thank You for contacting us.....");
+            window.location.href = "index.html";
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Error sending the message. Please try again later.");
+        });
+}
+
+    </script>
+
+</body>
+
+</html>
